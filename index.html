@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-light: linear-gradient(to right top, #f5f7fa, #c3cfe2);
+      --bg-dark: linear-gradient(to right top, #232526, #414345);
+      --font-color-light: #000;
+      --font-color-dark: #fff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: var(--bg-light);
+      color: var(--font-color-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      transition: all 0.4s ease;
+    }
+
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: var(--font-color-dark);
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 15px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(180deg);
+    }
+
+    .mode-toggle {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 15px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #ff5722, #ff9800);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .calculator {
+      width: 350px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    body.dark-mode .calculator {
+      background: rgba(34, 34, 34, 0.9);
+    }
+
+    #display {
+      width: 100%;
+      padding: 15px;
+      font-size: 24px;
+      text-align: right;
+      margin-bottom: 15px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      box-sizing: border-box;
+      background-color: #f5f5f5;
+    }
+
+    body.dark-mode #display {
+      background-color: #333;
+      color: white;
+      border-color: #555;
+    }
+
+    .keys {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    button {
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    button.number {
+      background-color: #dcedc8;
+    }
+
+    button.number:hover {
+      background-color: #c5e1a5;
+      transform: scale(1.05);
+    }
+
+    button.operator {
+      background-color: #ffccbc;
+    }
+
+    button.operator:hover {
+      background-color: #ffab91;
+      transform: scale(1.05);
+    }
+
+    button.function {
+      background-color: #b3e5fc;
+    }
+
+    button.function:hover {
+      background-color: #81d4fa;
+      transform: scale(1.05);
+    }
+
+    .equal {
+      background: #ff7043 !important;
+      color: white;
+    }
+
+    .equal:hover {
+      background: #e64a19 !important;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeIcon">🌙</button>
+  <button class="mode-toggle" onclick="toggleMode()" id="modeIcon">DEG</button>
+  <h1>Calculator</h1>
+  <div class="calculator">
+    <input type="text" id="display" readonly />
+    <div class="keys">
+      <button onclick="append('^')" class="function">x^y</button>
+      <button onclick="append('log(')" class="function">log</button>
+      <button onclick="append('ln(')" class="function">ln</button>
+      <button onclick="append('(')" class="operator">(</button>
+      <button onclick="append(')')" class="operator">)</button>
+
+      <button onclick="append('√(')" class="function">√</button>
+      <button onclick="clearDisplay()" class="operator">AC</button>
+      <button onclick="backspace()" class="operator">⌫</button>
+      <button onclick="append('%')" class="operator">%</button>
+      <button onclick="append('/')" class="operator">÷</button>
+
+      <button onclick="factorial()" class="function">x!</button>
+      <button onclick="append('7')" class="number">7</button>
+      <button onclick="append('8')" class="number">8</button>
+      <button onclick="append('9')" class="number">9</button>
+      <button onclick="append('*')" class="operator">×</button>
+
+      <button onclick="reciprocal()" class="function">1/x</button>
+      <button onclick="append('4')" class="number">4</button>
+      <button onclick="append('5')" class="number">5</button>
+      <button onclick="append('6')" class="number">6</button>
+      <button onclick="append('-')" class="operator">−</button>
+
+      <button onclick="append('π')" class="function">π</button>
+      <button onclick="append('1')" class="number">1</button>
+      <button onclick="append('2')" class="number">2</button>
+      <button onclick="append('3')" class="number">3</button>
+      <button onclick="append('+')" class="operator">+</button>
+
+      <button onclick="append('e')" class="function">e</button>
+      <button onclick="append('0')" class="number">0</button>
+      <button onclick="append('.') " class="number">.</button>
+      <button onclick="convertSD()" class="function">S↔D</button>
+      <button onclick="calculate()" class="equal operator">=</button>
+
+      <button onclick="append('sin(')" class="function">sin</button>
+      <button onclick="append('cos(')" class="function">cos</button>
+      <button onclick="append('tan(')" class="function">tan</button>
+    </div>
+  </div>
+
+  <script>
+    let display = document.getElementById("display");
+    let mode = "DEG";
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark-mode");
+      const icon = document.getElementById("themeIcon");
+      icon.textContent = document.body.classList.contains("dark-mode") ? "🌞" : "🌙";
+    }
+
+    function toggleMode() {
+      mode = mode === "DEG" ? "RAD" : "DEG";
+      document.getElementById("modeIcon").textContent = mode;
+    }
+
+    function append(value) {
+      display.value += value;
+    }
+
+    function clearDisplay() {
+      display.value = "";
+    }
+
+    function backspace() {
+      display.value = display.value.slice(0, -1);
+    }
+
+    function factorial() {
+      let n = parseInt(display.value);
+      if (isNaN(n) || n < 0) return display.value = "Error";
+      let f = 1;
+      for (let i = 1; i <= n; i++) f *= i;
+      display.value = f;
+    }
+
+    function reciprocal() {
+      let val = parseFloat(display.value);
+      if (val === 0) return display.value = "Error";
+      display.value = 1 / val;
+    }
+
+    function convertSD() {
+      const val = display.value;
+      if (val.includes("/")) {
+        try {
+          display.value = eval(val);
+        } catch {
+          display.value = "Error";
+        }
+      } else {
+        const decimal = parseFloat(val);
+        if (!isNaN(decimal)) {
+          const tolerance = 1.0E-6;
+          let h1 = 1, h2 = 0, k1 = 0, k2 = 1, b = decimal;
+          do {
+            const a = Math.floor(b);
+            let aux = h1; h1 = a * h1 + h2; h2 = aux;
+            aux = k1; k1 = a * k1 + k2; k2 = aux;
+            b = 1 / (b - a);
+          } while (Math.abs(decimal - h1 / k1) > decimal * tolerance);
+          display.value = `${h1}/${k1}`;
+        } else {
+          display.value = "Error";
+        }
+      }
+    }
+
+    function calculate() {
+      let expr = display.value;
+
+      const toRadians = angle => `(${angle}) * Math.PI / 180`;
+
+      if (mode === 'DEG') {
+        const tanRegex = /tan\(([^)]+)\)/g;
+        let match;
+        while ((match = tanRegex.exec(expr)) !== null) {
+          let angle = eval(match[1]);
+          if (angle % 180 === 90) {
+            display.value = "∞";
+            return;
+          }
+        }
+      }
+
+      expr = expr
+        .replace(/π/g, Math.PI)
+        .replace(/e/g, Math.E)
+        .replace(/√\(/g, 'Math.sqrt(')
+        .replace(/log\(/g, 'Math.log10(')
+        .replace(/ln\(/g, 'Math.log(')
+        .replace(/\^/g, '**')
+        .replace(/(\d+(\.\d+)?)%/g, (_, num) => `(${num}/100)`)
+        .replace(/sin\(([^)]+)\)/g, (_, a) => `Math.sin(${mode === 'DEG' ? toRadians(a) : a})`)
+        .replace(/cos\(([^)]+)\)/g, (_, a) => `Math.cos(${mode === 'DEG' ? toRadians(a) : a})`)
+        .replace(/tan\(([^)]+)\)/g, (_, a) => `Math.tan(${mode === 'DEG' ? toRadians(a) : a})`);
+
+      try {
+        let result = eval(expr);
+        if (typeof result === "number") {
+          result = Math.abs(result) < 1e-15 ? 0 : result;
+          result = parseFloat(result.toFixed(10));
+        }
+        if (!isFinite(result)) throw new Error("Math Error");
+        display.value = result;
+      } catch {
+        display.value = "Error";
+      }
+    }
+  </script>
+</body>
+</html>
